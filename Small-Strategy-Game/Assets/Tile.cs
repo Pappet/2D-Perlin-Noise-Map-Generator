@@ -2,25 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile {
+public class Tile
+{
 
-	TileType type;
-	int x;
-	int y;
+    TileType type;
+    int x;
+    int y;
 
-	//Tile Constructor with position and sprite
-	public Tile(int _x, int _y, TileType type)
-	{
-		this.x = _x;
-		this.y = _y;
-		this.type = type;
-	}
+    float elevation = 0f;
 
-	public Vector2 GetTilePosition(){
-		return new Vector2 (x,y);
-	}
+    //Tile Constructor with position and sprite
+    public Tile(int _x, int _y, float elevation)
+    {
+        this.x = _x;
+        this.y = _y;
+        this.elevation = elevation;
+    }
 
-	public TileType GetTileType(){
-		return type;
+    public Vector2 GetTilePosition()
+    {
+        return new Vector2(x, y);
+    }
+    public float GetTileElevation()
+    {
+        return elevation;
+    }
+	public void SetTileElevation(float evelation){
+		this.elevation = evelation;
 	}
 }
