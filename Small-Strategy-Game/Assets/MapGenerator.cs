@@ -7,11 +7,13 @@ public class MapGenerator : MonoBehaviour {
 	public List<Sprite>sprites = new List<Sprite>();
 	public int MapWidth;
 	public int MapHeight;
-	float Seed;
+	float Seed = 334;
 	float Scale = 3;
-
 	public Text seedText;
-	Map map;
+	public Map map;
+	public GameObject VillagePrefab;
+	public GameObject ForestPrefab;
+	public GameObject Forest_Dark_Prefab;
 	// Use this for initialization
 	void Awake () {
 		GenerateNewMap();
@@ -40,6 +42,7 @@ public class MapGenerator : MonoBehaviour {
 					g.name = "Tile: " + x + "/ " + y;				
 				}
 			}
+			PopulateMap();
 		}
 		else{
 			map = new Map(MapWidth,MapHeight);		
@@ -54,15 +57,15 @@ public class MapGenerator : MonoBehaviour {
 					g.name = "Tile: " + x + "/ " + y;				
 				}
 			}	
+			PopulateMap();
 		}
 	}
 
 	TileType GeneratePerlin(float x, float y){
 		TileType t = TileType.WATER_DARK;
-		float xCoord = (float)((x / MapWidth) * Scale + Seed) ;
-		float yCoord = (float)((y / MapHeight) * Scale + Seed) ;
+		float xCoord = (float)(x / MapWidth) * Scale + Seed ;
+		float yCoord = (float)(y / MapHeight) * Scale + Seed ;
 		float perlinMap = Mathf.PerlinNoise(xCoord, yCoord) ;
-		//Debug.Log(perlinMap);
 
 		if(perlinMap > 0.8f){
 			t = TileType.STONE_DARK;
@@ -86,6 +89,22 @@ public class MapGenerator : MonoBehaviour {
 			t = TileType.WATER;
 		}
 		return t;
+	}
+
+	void PopulateMap(){
+		for(int x = 0; x < map.GetWidth(); x++){
+			for(int y = 0; y < map.GetHeight(); y++){
+				if(map.GetTile(x,y).GetTileType() == TileType.GRASS_DARK){
+					if(Random.value > 0.5f)
+						Instantiate(Forest_Dark_Prefab, new Vector3(x,y,0), Quaternion.identity);
+				}
+				if(map.GetTile(x,y).GetTileType() == TileType.GRASS){
+					if(Random.value > 0.5f)
+						Instantiate(ForestPrefab, new Vector3(x,y,0), Quaternion.identity);
+				}
+				
+			}
+		}
 	}
 
 	public void ChangeSeed(){

@@ -1069,6 +1069,12 @@ MonoBehaviour:
   MapWidth: 50
   MapHeight: 50
   seedText: {fileID: 1259870701}
+  VillagePrefab: {fileID: 1905447779208946, guid: 111814128e39ba946841dd3358336eff,
+    type: 2}
+  ForestPrefab: {fileID: 1415515087784306, guid: b5443f7ebd8e57147843d1f3497371b1,
+    type: 2}
+  Forest_Dark_Prefab: {fileID: 1212740818015180, guid: 8fc15fa994c2b124a8f48835935330aa,
+    type: 2}
 --- !u!4 &1929858787
 Transform:
   m_ObjectHideFlags: 0
