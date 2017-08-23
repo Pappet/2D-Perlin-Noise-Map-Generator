@@ -21,7 +21,7 @@ public class Map
         {
             for (int y = 0; y < height; y++)
             {
-                tiles[x, y] = new Tile(x, y, 0f);
+                tiles[x, y] = new Tile(x, y, 0.8f, 0f, 0f);
             }
         }
     }
