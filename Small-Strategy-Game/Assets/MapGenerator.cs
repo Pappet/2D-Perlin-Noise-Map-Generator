@@ -9,9 +9,8 @@ public class MapGenerator : MonoBehaviour
     public int MapWidth;
     public int MapHeight;
     float Seed = 334;
-    float Scale = 3;
+    float Scale = 2;
     public Text seedText;
-
     Map map;
 
     // Use this for initialization
@@ -34,7 +33,7 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < map.GetHeight(); y++)
             {
                 Tile t = map.GetTile(x, y);
-                t.SetTileElevation(GeneratePerlin(x, y));
+                t.SetTileElevation(GeneratePerlinMix(x, y));
 
                 GameObject g = new GameObject();
                 g.AddComponent<SpriteRenderer>();
@@ -52,7 +51,23 @@ public class MapGenerator : MonoBehaviour
         float xCoord = (float)(x / MapWidth) * Scale + Seed;
         float yCoord = (float)(y / MapHeight) * Scale + Seed;
         return Mathf.PerlinNoise(xCoord, yCoord);
+    }
 
+    float GeneratePerlinMix(float x, float y)
+    {
+        float xCoord = (float)(x / MapWidth - 0.5f) * Scale + Seed;
+        float yCoord = (float)(y / MapHeight - 0.5f) * Scale + Seed;
+        float p1 = Mathf.PerlinNoise(xCoord, yCoord);
+
+        float xCoord2 = (float)(x / MapWidth - 0.5f) * 10 * Scale + Seed;
+        float yCoord2 = (float)(y / MapHeight - 0.5f) * 10 * Scale + Seed;
+        float p2 = Mathf.PerlinNoise(xCoord2, yCoord2);
+        
+        float xCoord3 = (float)(x / MapWidth - 0.5f) * 20 * Scale + Seed;
+        float yCoord3 = (float)(y / MapHeight - 0.5f) * 20 * Scale + Seed;
+        float p3 = Mathf.PerlinNoise(xCoord3, yCoord3);
+
+        return p1 + p2 * 0.25f - p3 * 0.5f;
     }
 
     Sprite SetSprite(Tile tile)

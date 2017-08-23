@@ -8,7 +8,6 @@ public class Tile
     TileType type;
     int x;
     int y;
-
     float elevation = 0f;
 
     //Tile Constructor with position and sprite
@@ -27,7 +26,8 @@ public class Tile
     {
         return elevation;
     }
-	public void SetTileElevation(float evelation){
-		this.elevation = evelation;
-	}
+    public void SetTileElevation(float evelation)
+    {
+        this.elevation = evelation;
+    }
 }
