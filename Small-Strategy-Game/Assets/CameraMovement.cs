@@ -9,6 +9,7 @@ public class CameraMovement : MonoBehaviour {
 	public float panSpeed = 5;
 	public float boarderThikness = 0;
 	public float scrollSpeed = 20;
+	public float zoomMax = 10f;
 
 	// Use this for initialization
 	void Start () {
@@ -38,7 +39,7 @@ public class CameraMovement : MonoBehaviour {
 		}
 		pos.x = Mathf.Clamp(pos.x, 0 + boarderThikness, mapGenerator.MapWidth - boarderThikness);
 		pos.y = Mathf.Clamp(pos.y, 0 + boarderThikness, mapGenerator.MapHeight - boarderThikness);
-		cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 5f, 10f);
+		cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 5f, zoomMax);
 		cam.transform.position = pos;
 	}
 }
