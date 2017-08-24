@@ -24,6 +24,9 @@ public class Tile
     {
         return new Vector2(x, y);
     }
+    public string GetTileType(){
+        return type.ToString();
+    }
     public float GetTileElevation()
     {
         return elevation;
@@ -31,6 +34,9 @@ public class Tile
     public float GetTileHumidity()
     {
         return humidity;
+    }
+    public void SetTileType(TileType type){
+        this.type = type;
     }
     public void SetTileElevation(float evelation)
     {

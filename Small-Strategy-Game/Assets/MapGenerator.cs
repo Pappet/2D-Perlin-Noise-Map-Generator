@@ -89,9 +89,8 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < map.GetHeight(); y++)
             {
                 Tile t = map.GetTile(x, y);
-                //t.SetTileElevation(GeneratePerlin(x, y));
                 t.SetTileElevation(GeneratePerlinMix(x, y, 0, 5));
-                t.SetTileHumidity(GeneratePerlinMix(x, y, 50,10));
+                t.SetTileHumidity(GeneratePerlinMix(x, y, 50, 10));
             }
         }
     }
@@ -134,36 +133,58 @@ public class MapGenerator : MonoBehaviour
         if (e > 0.9f)
         {
             if (h > 0.6f)
+            {
+                tile.SetTileType(TileType.SNOW);
                 return SnowSprite;
-
+            }
+            tile.SetTileType(TileType.ROCK);
             return RockSprite;
         }
         else if (e >= 0.7f)
         {
+            tile.SetTileType(TileType.STONE);
             return StoneSprite;
         }
         else if (e >= 0.4f)
         {
             if (h > 0.6f)
             {
+                tile.SetTileType(TileType.FOREST);
                 return ForestSprite;
             }
             else if (h < 0.1f)
             {
+                tile.SetTileType(TileType.DESERT);
                 return DesertSprite;
             }
+            tile.SetTileType(TileType.GRASS);
             return GrassSprite;
 
         }
         else if (e >= 0.3f)
         {
+            tile.SetTileType(TileType.BEACH);
             return BeachSprite;
         }
         else if (e >= 0.2f)
         {
+            tile.SetTileType(TileType.WATER_SHALLOW);
             return ShallowWaterSprite;
         }
+        tile.SetTileType(TileType.WATER_DEEP);
         return DeepWaterSprite;
+    }
+    public Vector3 GetTilePosition(Vector3 pos)
+    {
+        int x = (int)Mathf.Clamp(pos.x, 0, MapWidth - 1);
+        int y = (int)Mathf.Clamp(pos.y, 0, MapHeight - 1);
+        return goTiles[x, y].transform.position;
+    }
+    public Tile GetTileInfo(Vector3 pos)
+    {
+        int x = (int)Mathf.Clamp(pos.x, 0, MapWidth - 1);
+        int y = (int)Mathf.Clamp(pos.y, 0, MapHeight - 1);
+        return map.GetTile(x, y);
     }
     public void ChangeSeed()
     {
