@@ -19,11 +19,12 @@ public class MapGenerator : MonoBehaviour
     public int MapWidth;
     public int MapHeight;
     int Seed = 334;
-    float SeedOffset = 1;
-    float Frequency = 2f;
-    float FrequencyModifier = 5;
-    float WaveLenghtModifier = 0.004f;
-    float Redistribution = 3f;
+    float SeedOffset;
+    float Frequency;
+    float FrequencyModifier;
+    float WaveLenghtModifier;
+    float Redistribution;
+    float SeaLevel;
     bool TerrainGenerationToggle = false;
     enum DrawMode { Terrain, Elevation, Humidity };
     DrawMode drawMode = DrawMode.Terrain;
@@ -41,6 +42,8 @@ public class MapGenerator : MonoBehaviour
     public Slider frequencyModifierSlider;
     public Text WaveLenghtModifierText;
     public Slider WaveLenghtModifierSlider;
+    public Text SeaLevelText;
+    public Slider SeaLevelSlider;
     Map map;
     GameObject[,] goTiles;
 
@@ -49,8 +52,7 @@ public class MapGenerator : MonoBehaviour
     {
         goTiles = new GameObject[MapWidth, MapHeight];
         GenerateNewMap();
-        GenerateTerrain();
-        ChangeSprites();
+        TerrainGenerationToggle = true;
     }
 
     void Update()
@@ -71,6 +73,9 @@ public class MapGenerator : MonoBehaviour
 
         WaveLenghtModifier = WaveLenghtModifierSlider.value;
         WaveLenghtModifierText.text = WaveLenghtModifier.ToString();
+
+        SeaLevel = SeaLevelSlider.value;
+        SeaLevelText.text = SeaLevel.ToString();
 
         if (ElevationToggle.isOn && HumidityToggle.isOn)
         {
@@ -100,7 +105,9 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < map.GetHeight(); y++)
             {
                 Tile t = map.GetTile(x, y);
-                t.SetTileElevation(GeneratePerlinMix(x, y, SeedOffset, FrequencyModifier));
+                t.SetTileElevation(GeneratePerlin(x, y));
+                //t.SetTileElevation(GeneratePerlinMix(x, y, SeedOffset, FrequencyModifier));
+                
                 t.SetTileHumidity(GeneratePerlinMix(x, y, SeedOffset * 2, FrequencyModifier * 2));
             }
         }        
@@ -150,10 +157,10 @@ public class MapGenerator : MonoBehaviour
 
     float GeneratePerlin(float x, float y)
     {
-        float xCoord = (float)(x / MapWidth - 0.5f) * Frequency + Seed;
-        float yCoord = (float)(y / MapHeight - 0.5f) * Frequency + Seed;
+        float xCoord = (float)(x / MapWidth) * Frequency + Seed;
+        float yCoord = (float)(y / MapHeight) * Frequency + Seed;
         float e = Mathf.PerlinNoise(xCoord, yCoord);
-
+        e = Mathf.Clamp(e,0f,1f);
         return Mathf.Pow(e, Redistribution);
     }
 
@@ -183,7 +190,7 @@ public class MapGenerator : MonoBehaviour
         float e = tile.GetTileElevation();
         float h = tile.GetTileHumidity();
 
-        if (e > 0.9f)
+        if (e > SeaLevel + 0.6f)
         {
             if (h > 0.6f)
             {
@@ -193,12 +200,12 @@ public class MapGenerator : MonoBehaviour
             tile.SetTileType(TileType.ROCK);
             return RockSprite;
         }
-        else if (e >= 0.7f)
+        else if (e >= SeaLevel + 0.4f)
         {
             tile.SetTileType(TileType.STONE);
             return StoneSprite;
         }
-        else if (e >= 0.4f)
+        else if (e >= SeaLevel + 0.05f)
         {
             if (h > 0.6f)
             {
@@ -214,12 +221,12 @@ public class MapGenerator : MonoBehaviour
             return GrassSprite;
 
         }
-        else if (e >= 0.3f)
+        else if (e >= SeaLevel)
         {
             tile.SetTileType(TileType.BEACH);
             return BeachSprite;
         }
-        else if (e >= 0.2f)
+        else if (e >= SeaLevel - 0.1f)
         {
             tile.SetTileType(TileType.WATER_SHALLOW);
             return ShallowWaterSprite;
