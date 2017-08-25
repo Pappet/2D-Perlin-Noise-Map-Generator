@@ -14,6 +14,7 @@ public class MapGenerator : MonoBehaviour
     public Sprite StoneSprite;
     public Sprite RockSprite;
     public Sprite SnowSprite;
+    public Sprite BLANKSprite;
 
     public int MapWidth;
     public int MapHeight;
@@ -21,6 +22,11 @@ public class MapGenerator : MonoBehaviour
     float Frequency = 2f;
     float WaveLenghtModifier = 0.004f;
     float Redistribution = 3f;
+    enum DrawMode { Terrain, Humidity };
+    DrawMode drawMode = DrawMode.Humidity;
+
+    public Toggle TerrainToggle;
+    public Toggle HumidityToggle;
     public Text seedText;
     public Text redistributionText;
     public Slider redistributionSlider;
@@ -52,6 +58,13 @@ public class MapGenerator : MonoBehaviour
 
         WaveLenghtModifier = WaveLenghtModifierSlider.value;
         WaveLenghtModifierText.text = WaveLenghtModifier.ToString();
+
+        if (TerrainToggle.isOn)
+        {
+            drawMode = DrawMode.Terrain;
+        }
+        else
+            drawMode = DrawMode.Humidity;
     }
 
     public void ChangeSprites()
@@ -60,7 +73,16 @@ public class MapGenerator : MonoBehaviour
         {
             for (int y = 0; y < map.GetHeight(); y++)
             {
-                goTiles[x, y].GetComponent<SpriteRenderer>().sprite = SetSprite(map.GetTile(x, y));
+                if (drawMode == DrawMode.Terrain)
+                {
+                    goTiles[x, y].GetComponent<SpriteRenderer>().color = Color.white;
+                    goTiles[x, y].GetComponent<SpriteRenderer>().sprite = SetTerrainSprites(map.GetTile(x, y));
+                }
+                else if (drawMode == DrawMode.Humidity)
+                {
+                    goTiles[x, y].GetComponent<SpriteRenderer>().sprite = BLANKSprite;
+                    goTiles[x, y].GetComponent<SpriteRenderer>().color = SetHumidityColor(map.GetTile(x, y));
+                }
             }
         }
     }
@@ -125,7 +147,7 @@ public class MapGenerator : MonoBehaviour
         return Mathf.Pow(e, Redistribution);
     }
 
-    Sprite SetSprite(Tile tile)
+    Sprite SetTerrainSprites(Tile tile)
     {
         float e = tile.GetTileElevation();
         float h = tile.GetTileHumidity();
@@ -174,6 +196,16 @@ public class MapGenerator : MonoBehaviour
         tile.SetTileType(TileType.WATER_DEEP);
         return DeepWaterSprite;
     }
+    Color SetHumidityColor(Tile tile)
+    {
+        float h = tile.GetTileHumidity();
+
+        Color color1 = Color.white;
+        Color color2 = Color.blue;
+
+        return Color.Lerp(color1, color2, h);
+    }
+
     public Vector3 GetTilePosition(Vector3 pos)
     {
         int x = (int)Mathf.Clamp(pos.x, 0, MapWidth - 1);
