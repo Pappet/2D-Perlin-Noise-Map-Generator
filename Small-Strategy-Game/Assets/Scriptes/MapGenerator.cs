@@ -105,8 +105,8 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < map.GetHeight(); y++)
             {
                 Tile t = map.GetTile(x, y);
-                t.SetTileElevation(GeneratePerlin(x, y));
-                //t.SetTileElevation(GeneratePerlinMix(x, y, SeedOffset, FrequencyModifier));
+                //t.SetTileElevation(GeneratePerlin(x, y));
+                t.SetTileElevation(GeneratePerlinMix(x, y, SeedOffset, FrequencyModifier));
                 
                 t.SetTileHumidity(GeneratePerlinMix(x, y, SeedOffset * 2, FrequencyModifier * 2));
             }
