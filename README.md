@@ -1,2 +1,2 @@
 # 2D Perlin Noise Map Show
-Simple 2D Map generated with Perlin Noise in Unity3D.
+Simple 2D Tile Map, generated with Perlin Noise and an Editor in Unity3D.
